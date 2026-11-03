@@ -111,3 +111,12 @@ InitTestScene*.unity*
 # 打包输出（本项目习惯放在 Game/）
 [Gg]ame/
 
+
+# ---- 本项目追加 ----
+# 编辑器自动恢复场景（每次崩溃/未保存退出都会生成）
+[._]Recovery/
+[_]Recovery/
+# 临时截图目录
+[Ss]creenshots/
+# 打包产物
+[Gg]ame/

@@ -61,6 +61,9 @@ public class NPCRespawner : MonoBehaviour
     /// <summary>运镜进行中（外部可读）</summary>
     public bool IsCinematic { get; private set; }
 
+    [Tooltip("跟随幽灵的可选贴图（会从里面随机挑一张）。留空则用玩家贴图")]
+    public Sprite[] ghostSprites;
+
     private int spawned;
 
     void Awake()
@@ -80,6 +83,10 @@ public class NPCRespawner : MonoBehaviour
         SyncTemplateSettings();
 
         if (charge == null) charge = FindAnyObjectByType<ChargeController>();
+
+        // 把幽灵变体池交给跟随者脚本（每只随机挑一张）
+        if (ghostSprites != null && ghostSprites.Length > 0)
+            NPCDollower.GhostSprites = ghostSprites;
     }
 
     void Start()
@@ -158,6 +165,18 @@ public class NPCRespawner : MonoBehaviour
     void SyncTemplateSettings()
     {
         if (npcTemplate == null) return;
+
+        // 模板上残留的 playerScale 可能是旧的（换过玩家贴图/缩放之后就对不上了），
+        // 这里统一刷成玩家当前的实际缩放，保证跟随者不会莫名变大一倍
+        if (devourer != null && devourer.playerVisual != null)
+        {
+            var tf = npcTemplate.GetComponent<NPCDollower>();
+            if (tf != null)
+            {
+                tf.matchPlayerScale = true;
+                tf.playerScale = devourer.playerVisual.transform.lossyScale;
+            }
+        }
 
         var template = npcTemplate.GetComponent<LookBackWatcher>();
         if (template == null) return;

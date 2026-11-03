@@ -31,7 +31,9 @@ public class PauseMenu : MonoBehaviour
 
     public bool IsOpen { get { return open; } }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    // 按需求：游戏中途不再弹出「重开」菜单，所以这里关掉了自动创建。
+    // 想恢复的话，把下面那行注释取消即可。
+    // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Bootstrap()
     {
         if (instance != null) return;

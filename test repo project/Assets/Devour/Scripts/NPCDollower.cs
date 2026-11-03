@@ -92,6 +92,12 @@ public class NPCDollower : MonoBehaviour
     /// <summary>算好的落点表（相对玩家：x = 身后距离，y = 上下偏移）</summary>
     public static Vector2[] Slots = new Vector2[0];
 
+    /// <summary>
+    /// 跟随者可选的贴图（幽灵变体）。由 NPCRespawner 从图集填进来，
+    /// BeginFollow 时每只随机挑一张 —— 一群幽灵长得各不相同。
+    /// </summary>
+    public static Sprite[] GhostSprites;
+
     [Header("浮现")]
     [Tooltip("从透明到实体用多久")]
     public float fadeInDuration = 1.2f;
@@ -176,9 +182,30 @@ public class NPCDollower : MonoBehaviour
         }
 
         // 换形象（换到显示用子物体上）
-        if (visual != null && devouredSprite != null)
+        // 优先用「幽灵变体」里随机挑一张，让每只跟随者长得不一样；没有的话退回玩家贴图
+        if (visual != null)
         {
-            visual.sprite = devouredSprite;
+            if (GhostSprites != null && GhostSprites.Length > 0)
+            {
+                // 用「在跟随者列表里的序号」当种子 —— 换场景/重进本关后
+                // 同一只幽灵长得还是同一张图，不会变来变去
+                int seedIndex = Followers.IndexOf(this);
+                if (seedIndex < 0) seedIndex = Followers.Count;
+                visual.sprite = GhostSprites[seedIndex % GhostSprites.Length];
+            }
+            else if (devouredSprite != null)
+            {
+                visual.sprite = devouredSprite;
+            }
+        }
+
+        // 朝向和尺寸都要跟玩家一致：
+        //   贴图是同一张，如果这里不把 flipX / 子物体缩放对齐，
+        //   就会出现"幽灵比玩家大三倍、还面朝反方向"的情况
+        if (visual != null)
+        {
+            visual.flipX = false;
+            visual.transform.localScale = Vector3.one;
         }
 
         if (matchPlayerScale)

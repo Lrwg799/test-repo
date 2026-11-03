@@ -53,6 +53,9 @@ public class ChargeVisual : MonoBehaviour
     private Sprite[] runtimeFrames;   // 实际用哪组图
     private bool warnedNoFrames;
 
+    private Sprite idleSprite;        // 进入蓄力前的常态贴图
+    private bool idleCaptured;
+
     private Vector3 baseLocalPos;     // 原始 localPosition
     private float baseSizeY;          // 第 0 帧的高度（底边对齐的基准）
     private float basePivotY = 0.5f;  // 归一化的 pivot.y
@@ -112,6 +115,10 @@ public class ChargeVisual : MonoBehaviour
 
         if (!charge.IsCharging)
         {
+            // 关键：不蓄力时要把贴图还原成常态图，
+            // 否则中途取消蓄力会一直卡在最后一张蓄力图上
+            RestoreIdle();
+
             if (hideWhenNotCharging)
             {
                 SetVisible(false);
@@ -120,7 +127,27 @@ public class ChargeVisual : MonoBehaviour
         }
 
         SetVisible(true);
+        CaptureIdle();
         ApplyProgress(charge.Progress01);
+    }
+
+    /// <summary>第一次要换图之前，先把当时的常态贴图记下来</summary>
+    void CaptureIdle()
+    {
+        if (idleCaptured) return;
+        if (spriteRenderer == null) return;
+
+        idleSprite = spriteRenderer.sprite;
+        idleCaptured = true;
+    }
+
+    /// <summary>还原成进入蓄力前的常态贴图</summary>
+    void RestoreIdle()
+    {
+        if (!idleCaptured) return;
+
+        if (spriteRenderer != null) spriteRenderer.sprite = idleSprite;
+        if (image != null) image.sprite = idleSprite;
     }
 
     void ApplyProgress(float progress)

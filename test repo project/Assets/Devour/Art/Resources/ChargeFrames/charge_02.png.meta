@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 941a307450632de49b873ce9718496b6
+guid: 7487cdab89d1fdf468fd98ee94a8e8ac
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 188
+  spritePixelsToUnits: 35.9848
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -103,10 +103,10 @@ TextureImporter:
       name: charge_02_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
-        width: 202
-        height: 213
+        x: 148
+        y: 54
+        width: 399
+        height: 523
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
